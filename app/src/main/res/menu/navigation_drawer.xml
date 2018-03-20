@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group
+        android:id="@+id/firstGroup"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_films"
+            android:icon="@drawable/ic_movie"
+            android:title="@string/films" />
+        <item
+            android:id="@+id/nav_people"
+            android:icon="@drawable/ic_person"
+            android:title="@string/people" />
+        <item
+            android:id="@+id/nav_planets"
+            android:icon="@drawable/ic_planet"
+            android:title="@string/planets" />
+        <item
+            android:id="@+id/nav_species"
+            android:icon="@drawable/ic_species"
+            android:title="@string/species" />
+        <item
+            android:id="@+id/nav_starships"
+            android:icon="@drawable/ic_starships"
+            android:title="@string/starships" />
+        <item
+            android:id="@+id/nav_vehicles"
+            android:icon="@drawable/ic_vehicles"
+            android:title="@string/vehicles" />
+    </group>
+
+    <group
+        android:id="@+id/secGroup"
+        android:checkableBehavior="single">
+    <item
+        android:id="@+id/nav_histroy"
+        android:icon="@drawable/ic_history"
+        android:title="@string/history" />
+    </group>
+
+</menu>

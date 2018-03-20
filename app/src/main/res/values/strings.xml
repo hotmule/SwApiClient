@@ -1,0 +1,149 @@
+<resources>
+    <string name="app_name">Star Wars Encyclopedia</string>
+    <string name="card_name">Default name</string>
+    <string name="card_description">Default description</string>
+    <string name="title_activity_draver">DraverActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <string name="films">Films</string>
+    <string name="people">People</string>
+    <string name="planets">Planets</string>
+    <string name="species">Species</string>
+    <string name="starships">Starships</string>
+    <string name="vehicles">Vehicles</string>
+
+    <string name="history">History</string>
+    <string name="clear_history">Clear history</string>
+    <string name="info">Info</string>
+
+    <string name="title_activity_selected_data">ItemActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_data">No data</string>
+    <string name="search_in_category">Search in category...</string>
+    <string name="delete_browsing_history">Delete browsing history?</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+
+    <string-array name="categories_names">
+        <item>films</item>
+        <item>people</item>
+        <item>planets</item>
+        <item>species</item>
+        <item>starships</item>
+        <item>vehicles</item>
+    </string-array>
+
+    <string-array name="films_detail_names">
+        <item>Director</item>
+        <item>Episode</item>
+        <item>Opening crawl</item>
+        <item>Producer</item>
+        <item>Release date</item>
+    </string-array>
+    
+    <string-array name="films_tabs_names">
+        <item>Characters</item>
+        <item>Planets</item>
+        <item>Species</item>
+        <item>Starships</item>
+        <item>Vehicles</item>
+    </string-array>
+
+    <string-array name="people_detail_names">
+        <item>Birth year</item>
+        <item>Eye color</item>
+        <item>Gender</item>
+        <item>Hair color</item>
+        <item>Height</item>
+        <item>Mass</item>
+        <item>Skin color</item>
+    </string-array>
+
+    <string-array name="people_tabs_names">
+        <item>Films</item>
+        <item>Homeworld</item>
+        <item>Species</item>
+        <item>Starships</item>
+        <item>Vehicles</item>
+    </string-array>
+
+    <string-array name="planets_detail_names">
+        <item>Climate</item>
+        <item>Diameter</item>
+        <item>Gravity</item>
+        <item>Orbital period</item>
+        <item>Population</item>
+        <item>Rotation period</item>
+        <item>Surface water</item>
+        <item>Terrain</item>
+    </string-array>
+
+    <string-array name="planets_tabs_names">
+        <item>Films</item>
+        <item>Residents</item>
+    </string-array>
+
+    <string-array name="species_detail_names">
+        <item>Average height</item>
+        <item>Average lifespan</item>
+        <item>Classification</item>
+        <item>Designation</item>
+        <item>Eye colors</item>
+        <item>Hair colors</item>
+        <item>Language</item>
+        <item>Skin colors</item>
+    </string-array>
+
+    <string-array name="species_tabs_names">
+        <item>Films</item>
+        <item>Homeworld</item>
+        <item>Characters</item>
+    </string-array>
+
+    <string-array name="starships_detail_names">
+        <item>Cargo capacity</item>
+        <item>Consumables</item>
+        <item>Cost in credits</item>
+        <item>Crew</item>
+        <item>Hyperdrive rating</item>
+        <item>Length</item>
+        <item>Manufacturer</item>
+        <item>Max atmosphering speed</item>
+        <item>MGLT</item>
+        <item>Model</item>
+        <item>Passengers</item>
+        <item>Starship class</item>
+    </string-array>
+
+    <string-array name="starships_tabs_names">
+        <item>Films</item>
+        <item>Pilots</item>
+    </string-array>
+
+    <string-array name="vehicles_detail_names">
+        <item>Cargo capacity</item>
+        <item>Consumables</item>
+        <item>Cost in credits</item>
+        <item>Crew</item>
+        <item>Length</item>
+        <item>Manufacturer</item>
+        <item>Max atmosphering speed</item>
+        <item>Model</item>
+        <item>Passengers</item>
+        <item>Vehicle class</item>
+    </string-array>
+
+    <string-array name="vehicles_tabs_names">
+        <item>Films</item>
+        <item>Pilots</item>
+    </string-array>
+
+</resources>
