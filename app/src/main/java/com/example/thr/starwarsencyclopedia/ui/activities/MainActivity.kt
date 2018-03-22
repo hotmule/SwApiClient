@@ -126,7 +126,11 @@ class MainActivity :
 
     override fun showSearchResults(category: String, query: String) {
         if (query != savedStateSearchQuery && query.isNotEmpty())
-            searchCardsFragment.searchItemsInCategory(category, query)
+            try {
+                searchCardsFragment.searchItemsInCategory(category, query)
+            } catch (e: UninitializedPropertyAccessException) {
+                //fix up
+            }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

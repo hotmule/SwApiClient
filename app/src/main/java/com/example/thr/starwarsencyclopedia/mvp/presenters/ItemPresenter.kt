@@ -28,8 +28,8 @@ class ItemPresenter : BasePresenter<ItemView>() {
     private lateinit var stringDetails: ArrayList<String>
     private lateinit var itemDetails: ArrayList<ArrayList<ItemBaseDetails>>
 
-    fun requestItemDetails(itemCategory: String, itemId: String, categories: Array<String>) {
-
+    fun onItemSelected(itemName: String, itemCategory: String, itemId: String, categories: Array<String>) {
+        viewState.setupActionBar(itemName)
         viewState.makeProgressBarVisible()
 
         this.itemCategory = itemCategory
@@ -60,7 +60,7 @@ class ItemPresenter : BasePresenter<ItemView>() {
         viewState.makeProgressBarInvisible()
         viewState.makeTabLayoutVisible()
 
-        viewState.setupTabs(stringDetails, itemDetails)
+        viewState.setupTabs(itemCategory, stringDetails, itemDetails)
     }
 
     private fun onLoadingFailed() {
@@ -109,7 +109,7 @@ class ItemPresenter : BasePresenter<ItemView>() {
             turnLinksToItems(detailAsString)
     }
 
-    private fun turnLinksToItems(linksAsString: String){
+    private fun turnLinksToItems(linksAsString: String) {
         val convertedLinks = arrayListOf<ItemBaseDetails>()
 
         if (linksAsString != "[]") {

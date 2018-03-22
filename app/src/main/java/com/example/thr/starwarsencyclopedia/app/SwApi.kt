@@ -12,9 +12,6 @@ interface SwApi {
     companion object {
         var BASE_URL = "https://swapi.co/api/"
         var PAGE_SIZE = 10
-        var NAME_ARG = "name"
-        val CATEGORY_ARG = "category"
-        val ID_ARG = "id"
     }
 
     @GET("{category}/")

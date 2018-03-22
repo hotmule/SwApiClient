@@ -24,10 +24,8 @@
     <string name="info">Info</string>
 
     <string name="title_activity_selected_data">ItemActivity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_data">No data</string>
-    <string name="search_in_category">Search in category...</string>
+    <string name="search_in_category">Search in category…</string>
     <string name="delete_browsing_history">Delete browsing history?</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>

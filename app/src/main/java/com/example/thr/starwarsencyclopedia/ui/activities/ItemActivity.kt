@@ -1,8 +1,6 @@
 package com.example.thr.starwarsencyclopedia.ui.activities
 
 import android.content.Intent
-import android.support.design.widget.TabLayout
-
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentActivity
@@ -10,16 +8,15 @@ import android.view.View
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.thr.starwarsencyclopedia.R
-import com.example.thr.starwarsencyclopedia.app.SwApi
 import com.example.thr.starwarsencyclopedia.mvp.models.gson.ItemBaseDetails
 import com.example.thr.starwarsencyclopedia.mvp.presenters.ItemPresenter
 import com.example.thr.starwarsencyclopedia.mvp.views.ItemView
 import com.example.thr.starwarsencyclopedia.ui.adapters.SectionsPagerAdapter
 import com.example.thr.starwarsencyclopedia.ui.fragments.CardsFragment
-import com.example.thr.starwarsencyclopedia.ui.fragments.ItemInfoFragment
-
+import com.example.thr.starwarsencyclopedia.ui.fragments.InfoFragment
 import kotlinx.android.synthetic.main.activity_item.*
 import kotlin.collections.ArrayList
+import android.view.MenuItem
 
 
 class ItemActivity : MvpAppCompatActivity(), ItemView {
@@ -28,72 +25,86 @@ class ItemActivity : MvpAppCompatActivity(), ItemView {
     lateinit var itemPresenter: ItemPresenter
 
     companion object {
+        var NAME_ARG = "name"
+        val CATEGORY_ARG = "category"
+        val ID_ARG = "id"
+        val STRING_DETAILS_ARG = "stringDetails"
+        val LINK_DETAILS_ARG = "linkDetails"
+
         fun buildIntent(fragmentActivity: FragmentActivity?, name: String, category: String, id: String): Intent {
             val intent = Intent(fragmentActivity, ItemActivity::class.java)
-            intent.putExtra(SwApi.NAME_ARG, name)
-            intent.putExtra(SwApi.CATEGORY_ARG, category)
-            intent.putExtra(SwApi.ID_ARG, id)
+            intent.putExtra(NAME_ARG, name)
+            intent.putExtra(CATEGORY_ARG, category)
+            intent.putExtra(ID_ARG, id)
             return intent
         }
     }
 
-    private var sectionsPagerAdapter: SectionsPagerAdapter? = null
-    private lateinit var category: String
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("isRotated", true)
+    }
+
+    private lateinit var sectionsPagerAdapter: SectionsPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item)
 
+        if (savedInstanceState == null) {
+            val category = intent.getStringExtra(CATEGORY_ARG)
+            val name = intent.getStringExtra(NAME_ARG)
+            val id = intent.getStringExtra(ID_ARG)
+
+            val categoriesNames = resources.getStringArray(R.array.categories_names)
+            itemPresenter.onItemSelected(name, category, id, categoriesNames)
+        }
+    }
+
+    override fun setupActionBar(itemName: String) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = intent.getStringExtra(SwApi.NAME_ARG)
+        supportActionBar?.title = itemName
+    }
 
-        category = intent.getStringExtra(SwApi.CATEGORY_ARG)
-        val id = intent.getStringExtra(SwApi.ID_ARG)
-        val categoriesNames = resources.getStringArray(R.array.categories_names)
-
-        itemPresenter.requestItemDetails(category, id, categoriesNames)
+    override fun setupTabs(itemCategory: String,
+                           stringDetails: ArrayList<String>,
+                           itemDetails : ArrayList<ArrayList<ItemBaseDetails>>) {
 
         sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
-        tabLayout.setupWithViewPager(viewPager)
 
-        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
-        tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewPager))
-    }
+        setupInfoTab(itemCategory, stringDetails)
+        setupLinkTabs(itemCategory, itemDetails)
 
-    override fun setupTabs(stringDetails: ArrayList<String>, itemDetails : ArrayList<ArrayList<ItemBaseDetails>>) {
-        setupInfoTab(stringDetails)
-        setupLinkTabs(itemDetails)
         viewPager.adapter = sectionsPagerAdapter
+        tabLayout.setupWithViewPager(viewPager)
     }
 
-    private fun setupInfoTab(stringDetails: ArrayList<String>){
-        val itemInfoFragment = ItemInfoFragment()
-
+    private fun setupInfoTab(itemCategory: String, stringDetails: ArrayList<String>){
         val args = Bundle()
-        args.putStringArrayList("stringDetails", stringDetails)
-        args.putString("category", category)
+        args.putStringArrayList(STRING_DETAILS_ARG, stringDetails)
+        args.putString(CATEGORY_ARG, itemCategory)
 
+        val itemInfoFragment = InfoFragment()
         itemInfoFragment.arguments = args
-        sectionsPagerAdapter?.addFragment(itemInfoFragment, "Info")
+
+        sectionsPagerAdapter.addFragment(itemInfoFragment, "Info")
     }
 
-    private fun setupLinkTabs(itemDetails : ArrayList<ArrayList<ItemBaseDetails>>){
+    private fun setupLinkTabs(itemCategory: String, itemDetails : ArrayList<ArrayList<ItemBaseDetails>>){
         var itemCardsFragment: CardsFragment
 
-        val itemTabsNamesArrayId = resources.getIdentifier(
-                category + "_tabs_names",
-                "array",
-                baseContext.packageName)
-        val itemTabsNames = resources.getStringArray(itemTabsNamesArrayId)
+        val arrayId = resources.getIdentifier(itemCategory + "_tabs_names", "array", baseContext.packageName)
+        val itemTabsNames = resources.getStringArray(arrayId)
 
         for ((i, tabName) in itemTabsNames.withIndex()) {
-            itemCardsFragment = CardsFragment()
             val args = Bundle()
-            args.putParcelableArrayList("itemDetails", itemDetails[i])
+            args.putParcelableArrayList(LINK_DETAILS_ARG, itemDetails[i])
+
+            itemCardsFragment = CardsFragment()
             itemCardsFragment.arguments = args
 
-            sectionsPagerAdapter?.addFragment(itemCardsFragment, tabName)
+            sectionsPagerAdapter.addFragment(itemCardsFragment, tabName)
         }
     }
 
@@ -113,5 +124,12 @@ class ItemActivity : MvpAppCompatActivity(), ItemView {
 
     override fun makeProgressBarInvisible() {
         progress_bar.visibility = View.GONE
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId) {
+            android.R.id.home -> finish()
+        }
+        return true
     }
 }

@@ -40,12 +40,9 @@ class CardsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        cardsAdapter = CardsAdapter(this, this)
-        recyclerView.adapter = cardsAdapter
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-
         val category = arguments?.getString(MainActivity.CATEGORY_ARG)
-        val itemDetails = arguments?.getParcelableArrayList<ItemBaseDetails>("itemDetails")
+        val itemDetails = arguments?.getParcelableArrayList<ItemBaseDetails>(ItemActivity.LINK_DETAILS_ARG)
+        arguments?.clear()
 
         if (category != null)
             cardsPresenter.onSelectedCategoryReceived(category)
@@ -53,11 +50,13 @@ class CardsFragment :
         if (itemDetails != null)
             cardsPresenter.onItemDetailsReceived(itemDetails)
 
-        arguments?.clear()
-
         floatingActionButton.setOnClickListener {
             cardsPresenter.onClearHistoryButtonPressed()
         }
+
+        cardsAdapter = CardsAdapter(this, this)
+        recyclerView.adapter = cardsAdapter
+        recyclerView.layoutManager = LinearLayoutManager(activity)
     }
 
     fun searchItemsInCategory(category: String, searchQuery: String) {
@@ -65,7 +64,10 @@ class CardsFragment :
     }
 
     override fun setCards(data: ArrayList<ItemBaseDetails>) {
-        cardsAdapter.setData(data)
+        if (data.size != 0)
+            cardsAdapter.setData(data)
+        else
+            showTextMessage("No data")
     }
 
     override fun setMoreCards(data: ArrayList<ItemBaseDetails>) {

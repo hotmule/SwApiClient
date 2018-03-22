@@ -8,7 +8,9 @@ import com.example.thr.starwarsencyclopedia.mvp.models.gson.ItemBaseDetails
 
 @StateStrategyType(value = AddToEndSingleStrategy::class)
 interface ItemView : MvpView {
-    fun setupTabs(stringDetails: ArrayList<String>, itemDetails: ArrayList<ArrayList<ItemBaseDetails>>)
+    fun setupTabs(itemCategory: String,
+                  stringDetails: ArrayList<String>,
+                  itemDetails: ArrayList<ArrayList<ItemBaseDetails>>)
 
     fun makeTabLayoutVisible()
 
@@ -16,5 +18,8 @@ interface ItemView : MvpView {
 
     fun makeProgressBarInvisible()
 
+    @StateStrategyType(SkipStrategy::class)
     fun showError()
+
+    fun setupActionBar(itemName: String)
 }

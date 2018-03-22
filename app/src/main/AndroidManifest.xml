@@ -26,9 +26,6 @@
             android:label="@string/title_activity_selected_data"
             android:parentActivityName=".ui.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.thr.starwarsencyclopedia.ui.activities.MainActivity" />
         </activity>
 
     </application>

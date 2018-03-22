@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.PagerAdapter
 
-
 class SectionsPagerAdapter(fragment: FragmentManager) : FragmentPagerAdapter(fragment) {
 
     private var fragmentsList: MutableList<Fragment> = mutableListOf()
@@ -21,4 +20,6 @@ class SectionsPagerAdapter(fragment: FragmentManager) : FragmentPagerAdapter(fra
     override fun getItem(position: Int): Fragment = fragmentsList[position]
 
     override fun getCount() = fragmentsList.size
+
+    override fun getItemPosition(`object`: Any) = PagerAdapter.POSITION_NONE
 }
