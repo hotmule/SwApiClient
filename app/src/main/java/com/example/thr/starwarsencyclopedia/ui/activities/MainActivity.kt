@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.view.Menu
 import android.view.MenuItem
 import com.arellomobile.mvp.MvpAppCompatActivity
@@ -14,6 +15,7 @@ import com.example.thr.starwarsencyclopedia.mvp.presenters.MainPresenter
 import com.example.thr.starwarsencyclopedia.mvp.views.MainView
 import kotlinx.android.synthetic.main.activity_main.*
 import android.support.v7.widget.SearchView
+import android.view.View
 import com.example.thr.starwarsencyclopedia.ui.fragments.CardsFragment
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,12 +27,8 @@ class MainActivity :
         MainView,
         NavigationView.OnNavigationItemSelectedListener {
 
-    companion object {
-        const val CATEGORY_ARG = "category"
-    }
-
     @InjectPresenter
-    lateinit var mainPresenter: MainPresenter
+    lateinit var presenter: MainPresenter
 
     private val SEARCH_QUERY_TAG = "searchQuery"
     private var savedStateSearchQuery: String = ""
@@ -43,6 +41,10 @@ class MainActivity :
 
         if (savedInstanceState != null)
             savedStateSearchQuery = savedInstanceState.getString(SEARCH_QUERY_TAG)
+
+        mainFloatingActionButton.setOnClickListener {
+            presenter.onClearHistoryButtonClicked()
+        }
 
     }
 
@@ -101,57 +103,61 @@ class MainActivity :
 
         searchCardsFragment = CardsFragment()
 
-        searchView.setOnSearchClickListener {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.mainFrameLayout, searchCardsFragment)
-                    .addToBackStack(null)
-                    .commit()
-        }
-
         RxSearchView.queryTextChanges(searchView)
-                .debounce(300, TimeUnit.MILLISECONDS)
+                .debounce(500, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { query -> mainPresenter.onSearchQueryChanges(query.toString()) }
+                .subscribe { query -> presenter.onSearchQueryChanges(query.toString(), savedStateSearchQuery) }
 
         menuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(p0: MenuItem?): Boolean { return true }
 
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                onBackPressed()
+                presenter.onCategorySelected()
                 return true
             }
         })
     }
 
-    override fun showSearchResults(category: String, query: String) {
-        if (query != savedStateSearchQuery && query.isNotEmpty())
-            try {
-                searchCardsFragment.searchItemsInCategory(category, query)
-            } catch (e: UninitializedPropertyAccessException) {
-                //fix up
-            }
-    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val selectedCategory = item.title.toString()
-        mainPresenter.onCategorySelected(selectedCategory)
+        presenter.saveSelectedCategory(selectedCategory)
+        presenter.onCategorySelected()
         return true
-    }
-
-    override fun openCategory(selectedCategory: String) {
-        val historyCardsFragment = CardsFragment()
-        val args = Bundle()
-        args.putString(CATEGORY_ARG, selectedCategory)
-        historyCardsFragment.arguments = args
-
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.mainFrameLayout, historyCardsFragment)
-                .commit()
     }
 
     override fun setupActivity(selectedCategory: String) {
         supportActionBar?.title = selectedCategory
         drawerLayout.closeDrawer(GravityCompat.START)
+    }
+
+    override fun showClearHistoryButton() {
+        mainFloatingActionButton .visibility = View.VISIBLE
+    }
+
+    override fun hideClearHistoryButton() {
+        mainFloatingActionButton.visibility = View.GONE
+    }
+
+    private var alertDialog: AlertDialog? = null
+
+    override fun showConfirmDialog() {
+        alertDialog = AlertDialog.Builder(this, R.style.AlertDialogStyle)
+                .setMessage(getString(R.string.delete_browsing_history))
+                .setPositiveButton(getString(R.string.yes),
+                        { _, _ -> presenter.onClearHistoryConfirmed() })
+                .setNeutralButton(getString(R.string.cancel),
+                        { _, _ -> presenter.onAlertDialogDismiss() })
+                .setOnDismissListener { presenter.onAlertDialogDismiss() }
+                .show()
+    }
+
+    override fun hideConfirmDialog() {
+        alertDialog?.dismiss()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter.onAlertDialogDismiss()
     }
 }

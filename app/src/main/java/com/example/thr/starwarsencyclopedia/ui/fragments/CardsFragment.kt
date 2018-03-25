@@ -2,7 +2,6 @@ package com.example.thr.starwarsencyclopedia.ui.fragments
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,6 @@ import com.example.thr.starwarsencyclopedia.mvp.models.gson.ItemBaseDetails
 import com.example.thr.starwarsencyclopedia.mvp.presenters.CardsPresenter
 import com.example.thr.starwarsencyclopedia.mvp.views.CardsView
 import com.example.thr.starwarsencyclopedia.ui.activities.ItemActivity
-import com.example.thr.starwarsencyclopedia.ui.activities.MainActivity
 import com.example.thr.starwarsencyclopedia.ui.adapters.CardsAdapter
 import kotlinx.android.synthetic.main.fragment_cards.*
 
@@ -24,6 +22,10 @@ class CardsFragment :
         CardsView,
         CardsAdapter.OnBottomReachedListener,
         CardsAdapter.OnItemClickListener {
+
+    override fun clearRecyclerView() {
+        cardsAdapter.clear()
+    }
 
     @InjectPresenter
     lateinit var cardsPresenter: CardsPresenter
@@ -40,27 +42,15 @@ class CardsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val category = arguments?.getString(MainActivity.CATEGORY_ARG)
-        val itemDetails = arguments?.getParcelableArrayList<ItemBaseDetails>(ItemActivity.LINK_DETAILS_ARG)
-        arguments?.clear()
-
-        if (category != null)
-            cardsPresenter.onSelectedCategoryReceived(category)
-
-        if (itemDetails != null)
-            cardsPresenter.onItemDetailsReceived(itemDetails)
-
-        floatingActionButton.setOnClickListener {
-            cardsPresenter.onClearHistoryButtonPressed()
-        }
-
         cardsAdapter = CardsAdapter(this, this)
         recyclerView.adapter = cardsAdapter
         recyclerView.layoutManager = LinearLayoutManager(activity)
-    }
 
-    fun searchItemsInCategory(category: String, searchQuery: String) {
-        cardsPresenter.onSearchQueryReceived(category, searchQuery)
+        val linkDetails = arguments?.getParcelableArrayList<ItemBaseDetails>(ItemActivity.LINK_DETAILS_ARG)
+
+        if (linkDetails != null) {
+            cardsPresenter.onItemDetailsReceived(linkDetails)
+        }
     }
 
     override fun setCards(data: ArrayList<ItemBaseDetails>) {
@@ -101,41 +91,15 @@ class CardsFragment :
         messageTextView.visibility = View.VISIBLE
     }
 
+    override fun hideTextMessage() {
+        messageTextView.visibility = View.GONE
+    }
+
     override fun showProgress() {
         progressBar.visibility = View.VISIBLE
     }
 
     override fun hideProgress() {
         progressBar.visibility = View.GONE
-    }
-
-    private var alertDialog: AlertDialog? = null
-
-    override fun showConfirmDialog() {
-        alertDialog = AlertDialog.Builder(context!!, R.style.AlertDialogStyle)
-                .setMessage(getString(R.string.delete_browsing_history))
-                .setPositiveButton(getString(R.string.yes),
-                        { _, _ -> cardsPresenter.onClearHistoryConfirmed() })
-                .setNeutralButton(getString(R.string.cancel),
-                        { _, _ -> cardsPresenter.onAlertDialogDismiss() })
-                .setOnDismissListener { cardsPresenter.onAlertDialogDismiss() }
-                .show()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        cardsPresenter.onAlertDialogDismiss()
-    }
-
-    override fun hideConfirmDialog() {
-        alertDialog?.dismiss()
-    }
-
-    override fun showClearHistoryButton() {
-        floatingActionButton.visibility = View.VISIBLE
-    }
-
-    override fun hideClearHistoryButton() {
-        floatingActionButton.visibility = View.GONE
     }
 }

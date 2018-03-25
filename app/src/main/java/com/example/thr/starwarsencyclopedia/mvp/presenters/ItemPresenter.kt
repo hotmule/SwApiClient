@@ -1,15 +1,18 @@
 package com.example.thr.starwarsencyclopedia.mvp.presenters
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.thr.starwarsencyclopedia.mvp.SwService
+import com.example.thr.starwarsencyclopedia.mvp.global.SwService
 import javax.inject.Inject;
 import com.example.thr.starwarsencyclopedia.app.SwApp
 import com.example.thr.starwarsencyclopedia.common.Utils
 import com.example.thr.starwarsencyclopedia.app.SwApi
+import com.example.thr.starwarsencyclopedia.mvp.global.BasePresenter
 import com.example.thr.starwarsencyclopedia.mvp.models.gson.ItemBaseDetails
 import com.example.thr.starwarsencyclopedia.mvp.models.gson.categories.*
 import com.example.thr.starwarsencyclopedia.mvp.views.ItemView
 import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import kotlin.reflect.full.memberProperties
 
 @InjectViewState
@@ -47,7 +50,8 @@ class ItemPresenter : BasePresenter<ItemView>() {
 
     private fun loadItemDetails(observable: Observable<*>) {
         val subscription = observable
-                .compose(Utils.applySchedulers())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { answer -> onLoadingSuccess(answer) },
                         { error -> onLoadingFailed() })
@@ -126,7 +130,9 @@ class ItemPresenter : BasePresenter<ItemView>() {
                 id = Utils.idFromUrl(link)
 
                 val observable = swService.itemBaseDetails(category, id)
-                val subscription = observable.subscribe({ answer -> convertedLinks.add(answer) })
+                val subscription = observable
+                        .subscribeOn(Schedulers.trampoline())
+                        .subscribe({ answer -> convertedLinks.add(answer) })
                 unSubscribeOnDestroy(subscription)
             }
         }

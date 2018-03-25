@@ -1,4 +1,4 @@
-package com.example.thr.starwarsencyclopedia.mvp
+package com.example.thr.starwarsencyclopedia.mvp.global
 
 import com.example.thr.starwarsencyclopedia.app.SwApi
 import rx.Observable

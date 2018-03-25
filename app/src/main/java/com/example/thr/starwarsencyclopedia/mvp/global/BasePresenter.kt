@@ -1,8 +1,7 @@
-package com.example.thr.starwarsencyclopedia.mvp.presenters
+package com.example.thr.starwarsencyclopedia.mvp.global
 
 import com.arellomobile.mvp.MvpPresenter
 import com.arellomobile.mvp.MvpView
-
 import rx.Subscription
 import rx.subscriptions.CompositeSubscription
 

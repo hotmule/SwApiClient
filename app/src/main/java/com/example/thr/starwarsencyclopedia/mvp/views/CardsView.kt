@@ -17,20 +17,15 @@ interface CardsView : MvpView {
 
     fun deleteCards()
 
-    @StateStrategyType(SkipStrategy::class)
     fun showMessage(message: String)
 
     fun showTextMessage(message: String)
+
+    fun hideTextMessage()
 
     fun showProgress()
 
     fun hideProgress()
 
-    fun showConfirmDialog()
-
-    fun hideConfirmDialog()
-
-    fun showClearHistoryButton()
-
-    fun hideClearHistoryButton()
+    fun clearRecyclerView()
 }

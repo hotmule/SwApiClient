@@ -3,11 +3,18 @@ package com.example.thr.starwarsencyclopedia.mvp.presenters
 import com.arellomobile.mvp.InjectViewState
 import com.example.thr.starwarsencyclopedia.app.SwApi
 import com.example.thr.starwarsencyclopedia.app.SwApp
+import com.example.thr.starwarsencyclopedia.mvp.models.bus.ClearHistoryEvent
 import com.example.thr.starwarsencyclopedia.common.Utils
-import com.example.thr.starwarsencyclopedia.mvp.SwService
+import com.example.thr.starwarsencyclopedia.mvp.global.SwService
+import com.example.thr.starwarsencyclopedia.mvp.global.BasePresenter
 import com.example.thr.starwarsencyclopedia.mvp.models.HistoryDao
+import com.example.thr.starwarsencyclopedia.mvp.models.bus.OpenCategoryEvent
+import com.example.thr.starwarsencyclopedia.mvp.models.bus.SearchEvent
 import com.example.thr.starwarsencyclopedia.mvp.models.gson.ItemBaseDetails
 import com.example.thr.starwarsencyclopedia.mvp.views.CardsView
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import java.util.*
 import javax.inject.Inject
 
 
@@ -16,6 +23,7 @@ class CardsPresenter : BasePresenter<CardsView>() {
 
     init {
         SwApp.appComponent.inject(this)
+        EventBus.getDefault().register(this)
     }
 
     @Inject
@@ -28,9 +36,14 @@ class CardsPresenter : BasePresenter<CardsView>() {
     private var pageIsLast = false
     private var isSearchPage = false
 
-    fun onSelectedCategoryReceived(categoryName: String) {
-        this.categoryName = categoryName.toLowerCase()
-        if (categoryName != "History") loadData(1)
+    @Subscribe
+    fun openSelectedCategory(event: OpenCategoryEvent) {
+        viewState.clearRecyclerView()
+        viewState.hideTextMessage()
+
+        this.categoryName = event.category.toLowerCase()
+
+        if (categoryName != "history") loadData(1)
         else loadHistory()
     }
 
@@ -74,7 +87,6 @@ class CardsPresenter : BasePresenter<CardsView>() {
         if (history.isEmpty())
             showEmptyHistoryMessage()
         else {
-            viewState.showClearHistoryButton()
             viewState.setCards(history)
         }
     }
@@ -95,7 +107,28 @@ class CardsPresenter : BasePresenter<CardsView>() {
         }
     }
 
-    fun onSearchQueryReceived(category: String, searchQuery: String) {
+    private fun onLoadingSearchSuccess(itemBaseDetails: ArrayList<ItemBaseDetails>){
+        viewState.setCards(itemBaseDetails)
+        viewState.hideProgress()
+    }
+
+    fun onItemDetailsReceived(itemDetails: ArrayList<ItemBaseDetails>) {
+        pageIsLast = true
+        viewState.setCards(itemDetails)
+    }
+
+    @Subscribe
+    fun onHistoryClear(event: ClearHistoryEvent) {
+        historyDao.deleteAllData()
+        viewState.deleteCards()
+        showEmptyHistoryMessage()
+    }
+
+    @Subscribe
+    fun onSearchQueryReceived(event: SearchEvent) {
+        val searchQuery = event.query
+        val category = event.category
+
         viewState.showProgress()
         isSearchPage = true
         this.categoryName = category.toLowerCase()
@@ -115,32 +148,12 @@ class CardsPresenter : BasePresenter<CardsView>() {
         }
     }
 
-    private fun onLoadingSearchSuccess(itemBaseDetails: ArrayList<ItemBaseDetails>){
-        viewState.setCards(itemBaseDetails)
-        viewState.hideProgress()
-    }
-
-    fun onItemDetailsReceived(itemDetails: ArrayList<ItemBaseDetails>) {
-        pageIsLast = true
-        viewState.setCards(itemDetails)
-    }
-
-    fun onClearHistoryButtonPressed() {
-        viewState.showConfirmDialog()
-    }
-
-    fun onClearHistoryConfirmed() {
-        historyDao.deleteAllData()
-        viewState.deleteCards()
-        viewState.hideClearHistoryButton()
-        showEmptyHistoryMessage()
-    }
-
-    fun onAlertDialogDismiss() {
-        viewState.hideConfirmDialog()
-    }
-
     private fun showEmptyHistoryMessage(){
         viewState.showTextMessage("History is empty")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 }

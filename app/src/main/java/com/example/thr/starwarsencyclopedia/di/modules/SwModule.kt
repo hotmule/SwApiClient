@@ -1,7 +1,7 @@
 package com.example.thr.starwarsencyclopedia.di.modules
 
 import com.example.thr.starwarsencyclopedia.app.SwApi
-import com.example.thr.starwarsencyclopedia.mvp.SwService
+import com.example.thr.starwarsencyclopedia.mvp.global.SwService
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

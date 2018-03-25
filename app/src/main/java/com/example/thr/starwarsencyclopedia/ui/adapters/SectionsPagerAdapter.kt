@@ -2,10 +2,10 @@ package com.example.thr.starwarsencyclopedia.ui.adapters
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.PagerAdapter
 
-class SectionsPagerAdapter(fragment: FragmentManager) : FragmentPagerAdapter(fragment) {
+class SectionsPagerAdapter(fragment: FragmentManager) : FragmentStatePagerAdapter(fragment) {
 
     private var fragmentsList: MutableList<Fragment> = mutableListOf()
     private var fragmentsTitlesList: MutableList<String> = mutableListOf()
