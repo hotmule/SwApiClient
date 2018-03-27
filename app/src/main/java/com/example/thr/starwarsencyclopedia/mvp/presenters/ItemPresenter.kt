@@ -7,9 +7,12 @@ import com.example.thr.starwarsencyclopedia.app.SwApp
 import com.example.thr.starwarsencyclopedia.common.Utils
 import com.example.thr.starwarsencyclopedia.app.SwApi
 import com.example.thr.starwarsencyclopedia.mvp.global.BasePresenter
+import com.example.thr.starwarsencyclopedia.mvp.models.bus.SetInfoTabEvent
+import com.example.thr.starwarsencyclopedia.mvp.models.bus.SetLinksTabEvent
 import com.example.thr.starwarsencyclopedia.mvp.models.gson.ItemBaseDetails
 import com.example.thr.starwarsencyclopedia.mvp.models.gson.categories.*
 import com.example.thr.starwarsencyclopedia.mvp.views.ItemView
+import org.greenrobot.eventbus.EventBus
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -29,7 +32,7 @@ class ItemPresenter : BasePresenter<ItemView>() {
     private lateinit var categories: Array<String>
 
     private lateinit var stringDetails: ArrayList<String>
-    private lateinit var itemDetails: ArrayList<ArrayList<ItemBaseDetails>>
+    private lateinit var linkDetails: ArrayList<String>
 
     fun onItemSelected(itemName: String, itemCategory: String, itemId: String, categories: Array<String>) {
         viewState.setupActionBar(itemName)
@@ -64,7 +67,10 @@ class ItemPresenter : BasePresenter<ItemView>() {
         viewState.makeProgressBarInvisible()
         viewState.makeTabLayoutVisible()
 
-        viewState.setupTabs(itemCategory, stringDetails, itemDetails)
+        viewState.setupTabs(itemCategory)
+
+        EventBus.getDefault().post(SetInfoTabEvent(itemCategory, stringDetails))
+        EventBus.getDefault().postSticky(SetLinksTabEvent(linkDetails))
     }
 
     private fun onLoadingFailed() {
@@ -74,7 +80,7 @@ class ItemPresenter : BasePresenter<ItemView>() {
 
     private fun sortDetailsAndLinks(answer: Any) {
         stringDetails = arrayListOf()
-        itemDetails = arrayListOf()
+        linkDetails = arrayListOf()
 
         when (itemCategory) {
             categories[0] -> for (p in Film::class.memberProperties) {
@@ -110,7 +116,7 @@ class ItemPresenter : BasePresenter<ItemView>() {
         if (!detailAsString.contains(SwApi.BASE_URL) && detailAsString != "[]")
             stringDetails.add(detailAsString)
         else
-            turnLinksToItems(detailAsString)
+            linkDetails.add(detailAsString)
     }
 
     private fun turnLinksToItems(linksAsString: String) {
@@ -137,6 +143,6 @@ class ItemPresenter : BasePresenter<ItemView>() {
             }
         }
 
-        itemDetails.add(convertedLinks)
+        //itemDetails.add(convertedLinks)
     }
 }

@@ -12,7 +12,7 @@
             android:title="@string/films" />
         <item
             android:id="@+id/nav_people"
-            android:icon="@drawable/ic_person"
+            android:icon="@drawable/ic_vader"
             android:title="@string/people" />
         <item
             android:id="@+id/nav_planets"
@@ -20,15 +20,15 @@
             android:title="@string/planets" />
         <item
             android:id="@+id/nav_species"
-            android:icon="@drawable/ic_species"
+            android:icon="@drawable/ic_ackbar"
             android:title="@string/species" />
         <item
             android:id="@+id/nav_starships"
-            android:icon="@drawable/ic_starships"
+            android:icon="@drawable/ic_tie"
             android:title="@string/starships" />
         <item
             android:id="@+id/nav_vehicles"
-            android:icon="@drawable/ic_vehicles"
+            android:icon="@drawable/ic_at_at"
             android:title="@string/vehicles" />
     </group>
 

@@ -20,6 +20,4 @@ class SectionsPagerAdapter(fragment: FragmentManager) : FragmentStatePagerAdapte
     override fun getItem(position: Int): Fragment = fragmentsList[position]
 
     override fun getCount() = fragmentsList.size
-
-    override fun getItemPosition(`object`: Any) = PagerAdapter.POSITION_NONE
 }

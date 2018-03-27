@@ -46,11 +46,11 @@ class CardsFragment :
         recyclerView.adapter = cardsAdapter
         recyclerView.layoutManager = LinearLayoutManager(activity)
 
-        val linkDetails = arguments?.getParcelableArrayList<ItemBaseDetails>(ItemActivity.LINK_DETAILS_ARG)
+        val viewPagerPosition = arguments?.getInt(ItemActivity.VIEW_PAGER_POSITION_ARG)
+        if (viewPagerPosition != null)
+            cardsPresenter.onViewPagerPositionReceived(viewPagerPosition)
 
-        if (linkDetails != null) {
-            cardsPresenter.onItemDetailsReceived(linkDetails)
-        }
+        arguments?.clear()
     }
 
     override fun setCards(data: ArrayList<ItemBaseDetails>) {

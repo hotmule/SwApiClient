@@ -8,7 +8,7 @@ import io.realm.RealmObject
 import java.io.Serializable
 import java.util.*
 
-open class ItemBaseDetails : RealmObject, Parcelable {
+open class ItemBaseDetails : RealmObject {
 
     @Expose
     @SerializedName("name", alternate = ["title"])
@@ -30,23 +30,4 @@ open class ItemBaseDetails : RealmObject, Parcelable {
     }
 
     constructor()
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(name)
-        parcel.writeString(url)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<ItemBaseDetails> {
-        override fun createFromParcel(parcel: Parcel): ItemBaseDetails {
-            return ItemBaseDetails(parcel)
-        }
-
-        override fun newArray(size: Int): Array<ItemBaseDetails?> {
-            return arrayOfNulls(size)
-        }
-    }
 }

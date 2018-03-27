@@ -10,12 +10,13 @@ import com.example.thr.starwarsencyclopedia.mvp.global.BasePresenter
 import com.example.thr.starwarsencyclopedia.mvp.models.HistoryDao
 import com.example.thr.starwarsencyclopedia.mvp.models.bus.OpenCategoryEvent
 import com.example.thr.starwarsencyclopedia.mvp.models.bus.SearchEvent
+import com.example.thr.starwarsencyclopedia.mvp.models.bus.SetLinksTabEvent
 import com.example.thr.starwarsencyclopedia.mvp.models.gson.ItemBaseDetails
 import com.example.thr.starwarsencyclopedia.mvp.views.CardsView
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 @InjectViewState
@@ -37,14 +38,12 @@ class CardsPresenter : BasePresenter<CardsView>() {
     private var isSearchPage = false
 
     @Subscribe
-    fun openSelectedCategory(event: OpenCategoryEvent) {
+    fun onCategorySelected(event: OpenCategoryEvent) {
         viewState.clearRecyclerView()
         viewState.hideTextMessage()
 
         this.categoryName = event.category.toLowerCase()
-
-        if (categoryName != "history") loadData(1)
-        else loadHistory()
+        if (categoryName != "history") loadData(1) else loadHistory()
     }
 
     private fun loadData(pageNumber: Int) {
@@ -86,9 +85,19 @@ class CardsPresenter : BasePresenter<CardsView>() {
 
         if (history.isEmpty())
             showEmptyHistoryMessage()
-        else {
+        else
             viewState.setCards(history)
-        }
+    }
+
+    @Subscribe
+    fun onClearHistoryButtonClicked(event: ClearHistoryEvent) {
+        historyDao.deleteAllData()
+        viewState.deleteCards()
+        showEmptyHistoryMessage()
+    }
+
+    private fun showEmptyHistoryMessage() {
+        viewState.showTextMessage("History is empty")
     }
 
     fun onItemClick(item: ItemBaseDetails) {
@@ -107,36 +116,17 @@ class CardsPresenter : BasePresenter<CardsView>() {
         }
     }
 
-    private fun onLoadingSearchSuccess(itemBaseDetails: ArrayList<ItemBaseDetails>){
-        viewState.setCards(itemBaseDetails)
-        viewState.hideProgress()
-    }
-
-    fun onItemDetailsReceived(itemDetails: ArrayList<ItemBaseDetails>) {
-        pageIsLast = true
-        viewState.setCards(itemDetails)
-    }
-
     @Subscribe
-    fun onHistoryClear(event: ClearHistoryEvent) {
-        historyDao.deleteAllData()
-        viewState.deleteCards()
-        showEmptyHistoryMessage()
-    }
-
-    @Subscribe
-    fun onSearchQueryReceived(event: SearchEvent) {
-        val searchQuery = event.query
-        val category = event.category
-
+    fun onSearchQueryEntered(event: SearchEvent) {
         viewState.showProgress()
         isSearchPage = true
-        this.categoryName = category.toLowerCase()
+
+        val searchQuery = event.query
+        this.categoryName = event.category.toLowerCase()
 
         if (searchQuery.isNotEmpty()) {
-            if (category != "History") {
+            if (categoryName != "history") {
                 val observable = swService.searchInCategory(categoryName, searchQuery)
-
                 val subscription = observable
                         .compose(Utils.applySchedulers())
                         .subscribe(
@@ -148,8 +138,79 @@ class CardsPresenter : BasePresenter<CardsView>() {
         }
     }
 
-    private fun showEmptyHistoryMessage(){
-        viewState.showTextMessage("History is empty")
+    private fun onLoadingSearchSuccess(itemBaseDetails: ArrayList<ItemBaseDetails>) {
+        viewState.setCards(itemBaseDetails)
+        viewState.hideProgress()
+    }
+
+    private var viewPagerPosition: Int? = null
+
+    fun onViewPagerPositionReceived(viewPagerPosition: Int) {
+        this.viewPagerPosition = viewPagerPosition
+
+        val stickyEvent = setLinksTabStickyEvent()
+
+        if (stickyEvent != null) {
+            onItemLinksDetailsLoaded(stickyEvent)
+
+            if (stickyEvent.itemLinkDetails.size == viewPagerPosition)
+                EventBus.getDefault().removeStickyEvent(stickyEvent)
+        }
+    }
+
+    private fun setLinksTabStickyEvent() = EventBus.getDefault().getStickyEvent(SetLinksTabEvent::class.java)
+
+    @Subscribe(sticky = true)
+    fun onItemLinksDetailsLoaded(event: SetLinksTabEvent) {
+        if (this.viewPagerPosition != null) {
+            pageIsLast = true
+
+            val itemLinksDetails = event.itemLinkDetails
+
+            if (itemLinksDetails != null)
+                turnLinksToItems(itemLinksDetails[this.viewPagerPosition!! - 1])
+        }
+    }
+
+    lateinit var convertedLinks: ArrayList<ItemBaseDetails>
+
+    private fun turnLinksToItems(linksAsString: String) {
+        convertedLinks = arrayListOf()
+
+        if (linksAsString != "[]") {
+            viewState.showProgress()
+
+            val linksArray = linksAsString
+                    .replace("[", "")
+                    .replace("]", "")
+                    .split(", ")
+
+            var category: String
+            var id: String
+
+            for (link in linksArray) {
+                category = Utils.categoryFromUrl(link)
+                id = Utils.idFromUrl(link)
+
+                val observable = swService.itemBaseDetails(category, id)
+                val subscription = observable
+                        .compose(Utils.applySchedulers())
+                        .subscribe({ answer -> onConvertingLinkSuccess(answer, linksArray.size) },
+                                {error -> onLoadingFailed()})
+                unSubscribeOnDestroy(subscription)
+            }
+        }
+
+        viewState.setCards(convertedLinks)
+    }
+
+    private fun onConvertingLinkSuccess(convertedLink: ItemBaseDetails, linksArraySize: Int) {
+        convertedLinks.add(convertedLink)
+
+        if (convertedLinks.size == linksArraySize) {
+            viewState.setCards(convertedLinks)
+            viewState.hideProgress()
+        }
     }
 
     override fun onDestroy() {
