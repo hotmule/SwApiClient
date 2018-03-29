@@ -37,11 +37,6 @@ class ItemActivity : MvpAppCompatActivity(), ItemView {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean("isRotated", true)
-    }
-
     private lateinit var sectionsPagerAdapter: SectionsPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
