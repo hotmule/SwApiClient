@@ -1,7 +1,7 @@
-package ru.hotmule.swapiclient.di.modules
+package ru.hotmule.swapiclient.dagger.modules
 
 import ru.hotmule.swapiclient.app.SwApi
-import ru.hotmule.swapiclient.mvp.global.SwService
+import ru.hotmule.swapiclient.mvp.SwService
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

@@ -1,11 +1,10 @@
 package ru.hotmule.swapiclient.mvp.presenters
 
 import com.arellomobile.mvp.InjectViewState
-import ru.hotmule.swapiclient.mvp.global.SwService
+import ru.hotmule.swapiclient.mvp.SwService
 import javax.inject.Inject;
 import ru.hotmule.swapiclient.app.SwApp
 import ru.hotmule.swapiclient.app.SwApi
-import ru.hotmule.swapiclient.mvp.global.BasePresenter
 import ru.hotmule.swapiclient.mvp.views.ItemView
 import org.greenrobot.eventbus.EventBus
 import ru.hotmule.swapiclient.mvp.models.bus.SetInfoTabEvent

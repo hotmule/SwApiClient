@@ -4,8 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import ru.hotmule.swapiclient.app.SwApi
 import ru.hotmule.swapiclient.app.SwApp
 import ru.hotmule.swapiclient.common.Utils
-import ru.hotmule.swapiclient.mvp.global.SwService
-import ru.hotmule.swapiclient.mvp.global.BasePresenter
+import ru.hotmule.swapiclient.mvp.SwService
 import ru.hotmule.swapiclient.mvp.models.HistoryDao
 import ru.hotmule.swapiclient.mvp.models.gson.ItemBaseDetails
 import ru.hotmule.swapiclient.mvp.views.CardsView

@@ -1,4 +1,4 @@
-package ru.hotmule.swapiclient.di.modules
+package ru.hotmule.swapiclient.dagger.modules
 
 import ru.hotmule.swapiclient.app.SwApi
 import dagger.Module

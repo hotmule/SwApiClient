@@ -1,4 +1,4 @@
-package ru.hotmule.swapiclient.mvp.global
+package ru.hotmule.swapiclient.mvp
 
 import ru.hotmule.swapiclient.app.SwApi
 
