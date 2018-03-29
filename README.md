@@ -1,2 +1,2 @@
 # SwApiClient
-Simple swapi.co material client.
+Simple swapi.co android client.
