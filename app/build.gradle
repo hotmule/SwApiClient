@@ -6,7 +6,7 @@ apply plugin: 'realm-android'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.example.thr.starwarsencyclopedia"
+        applicationId "ru.hotmule.swapiclient"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1

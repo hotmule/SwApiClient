@@ -4,12 +4,13 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.thr.starwarsencyclopedia.ui.activities.ItemActivity">
+    tools:context="ru.hotmule.swapiclient.ui.activities.ItemActivity">
 
     <ListView
         android:id="@+id/infoListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:listSelector="@android:color/transparent">
     </ListView>
 
 </android.support.constraint.ConstraintLayout>

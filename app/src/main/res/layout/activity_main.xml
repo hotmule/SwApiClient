@@ -12,7 +12,7 @@
 
         <fragment
             android:id="@+id/cardsFragment"
-            android:name="com.example.thr.starwarsencyclopedia.ui.fragments.CardsFragment"
+            android:name="ru.hotmule.swapiclient.ui.fragments.CardsFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </fragment>

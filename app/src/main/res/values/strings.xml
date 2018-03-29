@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Star Wars Encyclopedia</string>
+    <string name="app_name">SW Info</string>
     <string name="card_name">Default name</string>
     <string name="card_description">Default description</string>
     <string name="title_activity_draver">DraverActivity</string>
