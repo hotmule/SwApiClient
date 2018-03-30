@@ -5,7 +5,7 @@ import com.arellomobile.mvp.MvpPresenter
 import ru.hotmule.swapiclient.mvp.views.InfoView
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import ru.hotmule.swapiclient.mvp.models.bus.SetInfoTabEvent
+import ru.hotmule.swapiclient.bus.SetInfoTabEvent
 
 @InjectViewState
 class InfoPresenter : MvpPresenter<InfoView>() {

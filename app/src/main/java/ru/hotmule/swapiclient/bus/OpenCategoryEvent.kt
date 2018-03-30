@@ -1,3 +1,3 @@
-package ru.hotmule.swapiclient.mvp.models.bus
+package ru.hotmule.swapiclient.bus
 
 class OpenCategoryEvent(val category: String)

@@ -3,9 +3,9 @@ package ru.hotmule.swapiclient.mvp.presenters
 import com.arellomobile.mvp.InjectViewState
 import ru.hotmule.swapiclient.mvp.views.MainView
 import org.greenrobot.eventbus.EventBus
-import ru.hotmule.swapiclient.mvp.models.bus.ClearHistoryEvent
-import ru.hotmule.swapiclient.mvp.models.bus.OpenCategoryEvent
-import ru.hotmule.swapiclient.mvp.models.bus.SearchEvent
+import ru.hotmule.swapiclient.bus.ClearHistoryEvent
+import ru.hotmule.swapiclient.bus.OpenCategoryEvent
+import ru.hotmule.swapiclient.bus.SearchEvent
 
 
 @InjectViewState

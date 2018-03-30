@@ -10,10 +10,10 @@ import ru.hotmule.swapiclient.mvp.models.gson.ItemBaseDetails
 import ru.hotmule.swapiclient.mvp.views.CardsView
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import ru.hotmule.swapiclient.mvp.models.bus.ClearHistoryEvent
-import ru.hotmule.swapiclient.mvp.models.bus.OpenCategoryEvent
-import ru.hotmule.swapiclient.mvp.models.bus.SearchEvent
-import ru.hotmule.swapiclient.mvp.models.bus.SetLinksTabEvent
+import ru.hotmule.swapiclient.bus.ClearHistoryEvent
+import ru.hotmule.swapiclient.bus.OpenCategoryEvent
+import ru.hotmule.swapiclient.bus.SearchEvent
+import ru.hotmule.swapiclient.bus.SetLinksTabEvent
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 

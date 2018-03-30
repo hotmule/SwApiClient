@@ -7,8 +7,8 @@ import ru.hotmule.swapiclient.app.SwApp
 import ru.hotmule.swapiclient.app.SwApi
 import ru.hotmule.swapiclient.mvp.views.ItemView
 import org.greenrobot.eventbus.EventBus
-import ru.hotmule.swapiclient.mvp.models.bus.SetInfoTabEvent
-import ru.hotmule.swapiclient.mvp.models.bus.SetLinksTabEvent
+import ru.hotmule.swapiclient.bus.SetInfoTabEvent
+import ru.hotmule.swapiclient.bus.SetLinksTabEvent
 import ru.hotmule.swapiclient.mvp.models.gson.categories.*
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
